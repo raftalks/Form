@@ -17,10 +17,6 @@
         "mockery/mockery": "0.7.*"
     },
     "autoload": {
-        "classmap": [
-            "Form",
-            "Html"
-        ],
         "psr-0": {
             "Form": "src/",
             "Html": "src/"
