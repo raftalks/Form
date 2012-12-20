@@ -1,0 +1,26 @@
+{
+    "name": "raftalks/form",
+    "description": "Easy way to make Forms with PHP. Specially useful with Laravel 4.",
+    "keywords": ["form","laravel","illuminate"],
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Rahmathullah Abdulfaththah (Raf)",
+            "email": "raftalks@gmail.com",
+            "homepage": "https://github.com/raftalks"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+    },
+    "require-dev": {
+        "mockery/mockery": "0.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Form": "src/",
+            "Html": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
