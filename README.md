@@ -2,8 +2,19 @@
 
 Form Maker can help buildind forms in PHP. Specially developed package for Laravel 4.
 
+## To Use with Laravel 4
+Install the package via composer.
+Now we need to put the class Alias inside L4 app/config/app.php file.
+Find the aliases key which should be below the providers key and put the following inside its array.
+```php
+	'Form'	 => 'Form\Form',
+```
+Now you can try using the Form::make(function($form){ ...here you can put the form fields ...});
+
+
 #Features
 Following shows you how this package library is used to make forms.
+
 
 ```php
 echo Form::make(function($form)
