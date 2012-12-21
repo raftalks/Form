@@ -64,6 +64,12 @@ Following shows you how this package library is used to make forms.
 
 	});
 
+	//the above Macro is now available as a Form field type and can be called within a Form 
+	
+	Form::make(function($form))
+	{
+		$form->group_text('telephone','Telephone Number');
+	}
 
 // will include more use cases later
 
