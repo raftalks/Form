@@ -37,8 +37,8 @@ Following shows you how this package library is used to make forms.
 		$tag->class('class decorated');
 	});
 
-	//Use Html to apply attribute to all text input fields in templates
-	Html::decorate('text',function($tag)
+	//Use Form::decorate to apply attribute to all text input fields in templates
+	Form::decorate('text',function($tag)
 	{		
 		$tag->class('class decorated');
 	});
@@ -49,7 +49,7 @@ Following shows you how this package library is used to make forms.
 	//bootstrap controlgroup textfield
 	Form::macro('group_text',function($name, $label=null)
 	{
-		return Html::template(function($form) use($name, $label)
+		return Form::template(function($form) use($name, $label)
 		{
 			$form->label($label)->class('control-label');
 
