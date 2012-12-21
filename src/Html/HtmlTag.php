@@ -19,10 +19,15 @@ class HtmlTag extends HtmlTagComposite
 	protected $tagChildren = array();
 	protected $tagText = null;
 
+	private $originType = null;
 
-	public function __construct($name)
+
+
+	public function __construct($name, $originType=null , $container = false)
 	{
 		$this->setName($name);
+		$this->originType = $originType;
+		$this->setContainer($container);
 	}
 
 	public function testConnect()
@@ -35,12 +40,22 @@ class HtmlTag extends HtmlTagComposite
 		$this->tagName = $name;
 	}
 
+	public function setContainer($bool = true)
+	{
+		$this->tagContainer = $bool;
+	}
+
 	public function getTagName()
 	{
 		return $this->tagName;
 	}
 
-	public function setAttribute($name, $value){
+	public function getOriginType()
+	{
+		return $this->originType;
+	}
+
+	public function setAttribute($name, $value = null){
 
 		if(is_null($this->tagAttr))
 		{
@@ -66,6 +81,7 @@ class HtmlTag extends HtmlTagComposite
 		return $this; //$tag;
 	}
 
+
 	public function addText($text)
 	{
 		$this->tagContainer = true;
@@ -88,15 +104,6 @@ class HtmlTag extends HtmlTagComposite
 
 	}
 
-
-	private function removeDuplicateWords($attr)
-	{
-		$str = str_replace(' ', ',', $attr);
-		$str = implode(' ',array_unique(explode(',', $str)));
-		return $str;
-	}
-
-
 	function __clone() {
         $tags = array();
         foreach ($this->tagChildren as $child) {
@@ -104,6 +111,7 @@ class HtmlTag extends HtmlTagComposite
         }
         $this->tagchildren = $tags;
     }
+
 
     protected function tagToString($level = 0)
     {

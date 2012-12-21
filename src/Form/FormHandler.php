@@ -1,28 +1,28 @@
 <?php
 namespace Form;
-use Html\htmlTag;
+use Html\HtmlTag;
+use Html\HtmlMaker;
+use Html\HtmlHandler;
 use Closure;
 
 
-class FormHandler
+class FormHandler extends HtmlHandler
 {
 
-	protected $root;
+	protected $defaultTag = 'form';
 
-	public function __construct()
-	{
-		$this->root = new HtmlTag('form');
-	}
-
+	//protected $macros = array();
 
 	public function make(Closure $callback)
 	{
-		$formMaker = new FormMaker(clone($this->root));
+		
+		$this->root = new HtmlTag($this->defaultTag);
+		
+		$HtmlMaker = new HtmlMaker(clone($this->root), $this->decorator, $this->macros);
 
-		$callback($formMaker);
+		$callback($HtmlMaker);
 
-		return $formMaker->render();
+		return $HtmlMaker->render();
 	}
-
 }
 

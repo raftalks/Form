@@ -2,12 +2,23 @@
 
 Form Maker can help buildind forms in PHP. Specially developed package for Laravel 4.
 
+#Updated to version 1.2.0
+###Change Log
+- Added Support to create Macros
+- Added Support to create global Html Tag Decorator
+- Added Support to include Template structure for advanced UI interface
+
+###Upgrade from version 1.0.0
+- Download the updates using Composer update command 
+- In Laravel 4, add the additional class Html class alias
+
 ## To Use with Laravel 4
 Install the package via composer.
 Now we need to put the class Alias inside L4 app/config/app.php file.
 Find the aliases key which should be below the providers key and put the following inside its array.
 ```php
 	'Form'	 => 'Form\Form',
+	'Html'	 => 'Html\Html', //required to be added for version 1.2.0
 ```
 Now you can try using the Form::make(function($form){ ...here you can put the form fields ...});
 
@@ -15,7 +26,50 @@ Now you can try using the Form::make(function($form){ ...here you can put the fo
 #Features
 Following shows you how this package library is used to make forms.
 
+##Additional Features added to version 1.2.0
 
+```php
+//globaly apply attributes to tag elements
+	
+	//apply attribute to all text input fields
+	Form::decorate('text',function($tag)
+	{		
+		$tag->class('class decorated');
+	});
+
+	//Use Html to apply attribute to all text input fields in templates
+	Html::decorate('text',function($tag)
+	{		
+		$tag->class('class decorated');
+	});
+
+
+//Create Form Macros with template
+
+	//bootstrap controlgroup textfield
+	Form::macro('group_text',function($name, $label=null)
+	{
+		return Html::template(function($form) use($name, $label)
+		{
+			$form->label($label)->class('control-label');
+
+			$form->div(function($form) use($name)
+			{
+				$form->text($name);
+				$form->setClass('controls');
+			});
+
+			$form->setClass('group-controls');
+		});
+
+	});
+
+
+// will include more use cases later
+
+```
+
+###version 1.0.0 features
 ```php
 echo Form::make(function($form)
 {

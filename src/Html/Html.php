@@ -1,14 +1,13 @@
 <?php
-namespace Form;
-use Html\TagDecorator;
+namespace Html;
 
-class Form
+class Html
 {
 
 	public static $handler;
 
 	public static $decorator;
-	
+
 	
 	public static function resolveFacadeInstance()
 	{
@@ -16,7 +15,7 @@ class Form
 
 		$decorator = static::getDecorator();
 
-		return static::$handler = new FormHandler($decorator);
+		return static::$handler = new HtmlHandler($decorator);
 	}
 
 	public static function getDecorator()
