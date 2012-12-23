@@ -32,6 +32,18 @@ class ElementHandler
 	}
 
 
+	public function setAttributes($attrs)
+	{
+		if(is_array($attrs))
+		{
+			foreach($attrs as $Key => $value)
+			{
+				$this->setAttribute($Key, $value);
+			}
+		}
+	}
+
+
 	public function addChildren(HtmlTag $child)
 	{
 		$this->element->addTag($child);
@@ -57,6 +69,7 @@ class ElementHandler
 			{
 
 				$tag = $this->newElementInstance('option', $originType);
+				$tag->setAttribute('value',$val);
 				
 				if(in_array($val, $selected))
 				{

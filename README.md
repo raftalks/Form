@@ -2,7 +2,16 @@
 
 Form Maker can help buildind forms in PHP. Specially developed package for Laravel 4.
 
-#Updated to version 1.2.0
+#Updated to version 1.2.2
+###Changelog
+- Added Support to Share Data across nested Closures
+- Added method to share form errors 
+- Added Support to putText inside a container
+- Added support for tag element to fill an array of attributes using method setAttributes()
+- Added method include_all(Closure $callback) to include template in all forms generated
+- Fixed bug with Select input type
+
+##Updated to version 1.2.0
 ###Change Log
 - Added Support to create Macros
 - Added Support to create global Html Tag Decorator
@@ -26,12 +35,121 @@ Now you can try using the Form::make(function($form){ ...here you can put the fo
 #Features
 Following shows you how this package library is used to make forms.
 
-##Additional Features added to version 1.2.0
+### New Features added to version 1.2.2
+
+####Form elements common to all forms generated
+When using with a framework like Laravel, you may want to include some element like hidden csrf token in all the forms. We can do this by making a template of csrf and putting it in the Form::include_all() method.
+
+```php
+
+Form::include_all(function()
+{
+	return Form::template('div',function($form)
+	{
+		$form->hidden('csrf_token')->value(Session::getToken());
+		$form->setClass('token');
+	});
+});
+
+```
+
+Now we can share variables across nested closure methods. For example we want to pass the POST data or Error messages, which is used to set the value of the field.
+
+```php
+	
+Form::make(function($form) use($usergroups, $validation_errors)
+{
+	
+	$form->share('usergroups',$usrgroups);
+	$form->share_errors($validation_errors);
+
+	$form->div(function($form)
+	{
+
+		$usergroups = $form->get('usergroups');	
+		$form->select('usergroup_id',trans('user.usergroup'))->options($usergroups);
+
+	});
+
+});
+
+```
+
+#### other new features added includes
+```php
+
+//sample function to filter errors
+function_to_filter_error_by_field($fieldname, $errors)
+{
+	//filter errors and return matched error
+}
+
+//Macro created to show error message for fields
+Form::macro('show_error',function($fieldName, $message=null)
+{
+	return Form::template('span',function($form) use($fieldName, $message)
+	{
+		$error_messages = $form->get_errors(); 
+		$error_message = function_to_filter_error_by_field($fieldName, $error_messages);			
+
+
+		// the contaner is <span></span> and we are
+		// adding the error message as text
+		$form->putText($error_message);
+		
+		// set the container class
+		$form->setClass('help-block text-error');
+		
+	});
+});
+
+
+// Now we are creating a nother styled input text field which uses
+// the above show error macro 
+
+Form::macro('input_text', function($name, $label, $value=null, $attr = array())
+{
+	return Form::template('div',function($form) use ($name, $label, $attr, $value)
+	{
+			//notice the setAttribute method used here can fill the element with an array
+			//of attributes
+
+		$form->text($name)->placeholder($label)->value($value)->setAttributes($attr);
+		
+		//we are calling the macro to run the template and show the error message for this input template
+		$form->show_error($name);
+
+		$form->setClass('input');
+	});
+});
+
+
+// Now we use everything above like this to make a real form.
+
+Form::make(function($form) use($validation_errors)
+{
+	$form->share_errors($validation_errors);
+
+	//This will run the above macro and will show error messages if any exists
+	$form->input_text('username','User Name');
+
+});
+
+```
+
+
+####Additional Features added to version 1.2.0
 
 ```php
 //globaly apply attributes to tag elements
 	
 	//apply attribute to all text input fields
+	Form::decorate('text',function($tag)
+	{		
+		$tag->class('class decorated');
+	});
+
+	//Use Form::decorate to apply attribute to all text input fields in templates
 	Form::decorate('text',function($tag)
 	{		
 		$tag->class('class decorated');
@@ -43,7 +161,7 @@ Following shows you how this package library is used to make forms.
 	//bootstrap controlgroup textfield
 	Form::macro('group_text',function($name, $label=null)
 	{
-		return Form::template('div',function($form) use($name, $label)
+		return Form::template(function($form) use($name, $label)
 		{
 			$form->label($label)->class('control-label');
 
@@ -64,16 +182,6 @@ Following shows you how this package library is used to make forms.
 	{
 		$form->group_text('telephone','Telephone Number');
 	}
-
-	//The above will result the following html code
-	/**
-	<div class="group-controls">
-		<label class="control-label">Telephone Number</label>
-		<div class="controls">
-			<input name="telephone" type="text">
-		</div>
-	</div>
-	*/
 
 // will include more use cases later
 

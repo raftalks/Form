@@ -21,30 +21,73 @@ class HtmlMaker
 				'radio'		=> 'input',
 				'password'	=> 'input',
 				'legend'	=> 'legend',
-
+				'hidden'	=> 'input',
 		);
 
 
 	protected $decorator = null;
 
 	protected $fieldsHavingTypesAttr = array('input');
-	protected $fieldsContainerTypes = array('label','legend','option','button','textarea','select');
+	protected $fieldsContainerTypes = array('form','label','legend','option','button','textarea','select','a','ol','ul','li','i','p','h1','h2','h3','h4','h5','span');
 
 	protected $macros = array();
 
+	protected $global_vars = array();
+
+	protected $macro_include_in_all = '_include_in_all_';
+
 
 	//Instantiate the HtmlMaker setting up root element and decorator
-	public function __construct($root, TagDecorator $decorator, $macros)
+	public function __construct($root, TagDecorator $decorator, $macros, $global_vars)
 	{
 		$this->root = $root;
 		$this->decorator = $decorator;
 		$this->macros = $macros;
+		$this->global_vars = $global_vars;
+	}
+
+	public function getGlobalVars()
+	{
+		return $this->global_vars;
 	}
 
 
 	public function getRoot()
 	{
 		return $this->root;
+	}
+
+	//share data to root scope to enable access from nested closures
+	public function share($name, $value)
+	{
+		$this->global_vars[$name] = $value;
+	}
+
+	public function share_errors($errors)
+	{
+		$this->global_vars['error_messages'] = $errors;
+	}
+
+	public function get_errors()
+	{
+		 return $this->get('error_messages');
+	}
+
+	//get data from roots scope from any where within a Form closure
+	public function get($name)
+	{
+		if(isset($this->global_vars[$name]))
+		{
+			return $this->global_vars[$name];
+		}
+
+		return null;
+	}
+
+	//put text into container
+	public function putText($text)
+	{
+		$this->root->addtext($text);
 	}
 
 
@@ -73,7 +116,7 @@ class HtmlMaker
 
 	protected function newInstanceOfHtmlMaker($root)
 	{
-		return new Static($root , $this->decorator, $this->macros);
+		return new Static($root , $this->decorator, $this->macros, $this->global_vars);
 	}
 
 	protected function newElementInstance($tag, $originType = null, $container =false)
@@ -159,8 +202,9 @@ class HtmlMaker
 	}
 
 
+
 	//sets root element attributes
-	protected function setRootAttr($name, $value)
+	public function setRootAttr($name, $value)
 	{
 		$this->root->setAttribute($name, $value);
 
@@ -169,16 +213,22 @@ class HtmlMaker
 
 	public function render()
 	{
+		if($this->isMacro($this->macro_include_in_all))
+		{
+			$this->RunMacro($this->macro_include_in_all);
+		}
+
 		return $this->root->render();
 	}
 
 
-	protected function RunMacro($macro, $name, $label)
+	protected function RunMacro($macro, $args=array())
 	{
+		
 		$macroCallback = $this->macros[$macro];
 		//$htmlMaker = '';
-		$element = $macroCallback($name, $label);
-
+		$element = call_user_func_array($macroCallback, $args);
+		
 		$this->addToRoot($element);
 		
 	}
@@ -211,7 +261,7 @@ class HtmlMaker
 		else
 		{
 
-			$name = $args[0];
+			$name = isset($args[0]) ? $args[0] : null;
 			$label = isset($args[1]) ? $args[1] : null;
 
 			if($name instanceOf Closure)
@@ -223,7 +273,7 @@ class HtmlMaker
 			//check if method is calling a macro
 			if($this->isMacro($method))
 			{
-				return $this->RunMacro($method, $name, $label);
+				return $this->RunMacro($method, $args);
 			}
 
 			return $this->makeElement($method, $name, $label);

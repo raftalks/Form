@@ -16,6 +16,9 @@ class HtmlHandler
 	protected $macros = array();
 
 
+	protected static $instances = array();
+
+
 	public function __construct(TagDecorator $decorator)
 	{
 		$this->decorator = $decorator;
@@ -37,7 +40,7 @@ class HtmlHandler
 			}
 		}
 
-		$HtmlMaker = new HtmlMaker(clone($this->root), $this->decorator, $this->macros);
+		$HtmlMaker = $this->getInstanceHtmlMaker(); 
 
 		$callback($HtmlMaker);
 
@@ -47,6 +50,22 @@ class HtmlHandler
 		}
 
 		return $HtmlMaker->render();
+	}
+
+	
+	protected function getInstanceHtmlMaker()
+	{
+		$global_vars = array();
+		if(isset(static::$instances['HtmlMaker']))
+		{
+			$lastHtmlMaker = static::$instances['HtmlMaker'];
+			$global_vars = $lastHtmlMaker->getGlobalVars();
+		}
+
+		$HtmlMaker =  new HtmlMaker($this->root, $this->decorator, $this->macros, $global_vars);
+        static::$instances['HtmlMaker'] = $HtmlMaker;
+        
+        return $HtmlMaker;
 	}
 
 
@@ -63,7 +82,15 @@ class HtmlHandler
 
 	public function template($tag, $callback=null)
 	{
+		
 		return $this->make($tag, $callback, true);
+	}
+
+
+	//include the template element in all the forms generated
+	public function include_all(Closure $callback)
+	{
+		$this->macros['_include_in_all_'] = $callback;
 	}
 
 }
