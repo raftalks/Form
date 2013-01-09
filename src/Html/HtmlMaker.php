@@ -9,6 +9,7 @@ class HtmlMaker
 	protected $fieldTypes = array(
 				'text'		=> 'input',
 				'textarea'	=> 'textarea',
+				'number'	=> 'input',
 				'select'	=> 'select',
 				'date'		=> 'input',
 				'time'		=> 'input',
@@ -28,7 +29,7 @@ class HtmlMaker
 	protected $decorator = null;
 
 	protected $fieldsHavingTypesAttr = array('input');
-	protected $fieldsContainerTypes = array('form','label','legend','option','button','textarea','select','a','ol','ul','li','i','p','h1','h2','h3','h4','h5','span');
+	protected $fieldsContainerTypes = array('form','fieldset','label','legend','option','button','textarea','select','a','ol','ul','li','i','p','h1','h2','h3','h4','h5','span','table','tr','th','td','thead','tbody');
 
 	protected $macros = array();
 
@@ -254,6 +255,11 @@ class HtmlMaker
 			$name = str_replace('set', '', $method);
 
 			$name = strtolower($name);
+			
+			if(isset($args[1]))
+			{
+				$name = $args[1];
+			}
 			
 			return $this->setRootAttr($name, $args[0]);
 
