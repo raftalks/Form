@@ -48,27 +48,30 @@ Following shows you how this package library is used to make forms.
 
 //making table based forms
 
-$form->table(function($table)
+Form::make('div', function($form))
 {
-	$table->thead(function($table)
+	$form->table(function($table)
 	{
-		$table->tr(function($tr)
+		$table->thead(function($table)
 		{
-			$tr->th('item');
-			$tr->th('category');
+			$table->tr(function($tr)
+			{
+				$tr->th('item');
+				$tr->th('category');
+			});
 		});
+
+
+		$table->tr(function($tr)
+		{	
+			$tr->td()->ng_bind('item.name','ng-bind');
+			$tr->td()->ng_bind('item.category','ng-bind');
+
+			$tr->setNgRepeat('item in list','ng-repeat'); //using second parameter to force the attribute name.
+		});
+
+		$table->setClass('table');
 	});
-
-
-	$table->tr(function($tr)
-	{	
-		$tr->td()->ng_bind('item.name','ng-bind');
-		$tr->td()->ng_bind('item.category','ng-bind');
-
-		$tr->setNgRepeat('item in list','ng-repeat'); //using second parameter to force the attribute name.
-	});
-
-	$table->setClass('table');
 });
 
 ```
