@@ -2,8 +2,15 @@
 
 Form Maker can help buildind forms in PHP. Specially developed package for Laravel 4.
 
-#Updated to version 1.2.2
-###Changelog
+#Updated to version 1.2.3
+###Change Log
+- Added support to create table, tr, th, td, thead, tbody, etc to generate html Table
+- Added additional support for html container type tags
+- Added secondary optional parameter to set method for container attributes, example $form->setNgBind($value, 'ng-bind'); which will force the attribute to be set as given in second parameter.
+
+
+##Updated to version 1.2.2
+###Change Log
 - Added Support to Share Data across nested Closures
 - Added method to share form errors 
 - Added Support to putText inside a container
@@ -35,7 +42,39 @@ Now you can try using the Form::make(function($form){ ...here you can put the fo
 #Features
 Following shows you how this package library is used to make forms.
 
-### New Features added to version 1.2.2
+### New Features added to version 1.2.3
+
+```php
+
+//making table based forms
+
+$form->table(function($table)
+{
+	$table->thead(function($table)
+	{
+		$table->tr(function($tr)
+		{
+			$tr->th('item');
+			$tr->th('category');
+		});
+	});
+
+
+	$table->tr(function($tr)
+	{	
+		$tr->td('')->ng_bind('item.name','ng-bind');
+		$tr->td('')->ng_bind('item.category','ng-bind');
+
+		$tr->setNgRepeat('item in list','ng-repeat'); //using second parameter to force the attribute name.
+	});
+
+	$table->setClass('table');
+});
+
+```
+
+
+#### New Features added to version 1.2.2
 
 ####Form elements common to all forms generated
 When using with a framework like Laravel, you may want to include some element like hidden csrf token in all the forms. We can do this by making a template of csrf and putting it in the Form::include_all() method.
