@@ -80,6 +80,17 @@ class HtmlHandler
 		$this->macros[$name] = $callback;
 	}
 
+	public function getMacro($name)
+	{
+		if(!isset($this->macros[$name]))
+		{
+			return false;
+		}
+		
+		return $this->macros[$name];
+	}
+	
+
 	public function template($tag, $callback=null)
 	{
 		

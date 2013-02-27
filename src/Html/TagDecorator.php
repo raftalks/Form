@@ -11,7 +11,7 @@ class TagDecorator
 
 	
 
-	public function decorate($tag)
+	public function decorate(HtmlTag $tag)
 	{
 		$tagName 		= $tag->getTagName();
 		$originType 	= $tag->getOriginType();
