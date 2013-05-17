@@ -143,7 +143,7 @@ class HtmlTag extends HtmlTagComposite
     	}
     	else
     	{
-    		$template = $this->tagOpen . $this->tagClose;
+    		$template = $this->tagOpen .$this->tagClose;
     	}
 
     	return $template;
@@ -198,7 +198,7 @@ class HtmlTag extends HtmlTagComposite
 		{
 			foreach($attr as $key => $value)
 			{
-				$output .= " $key='$value'";
+				$output .= "$key='$value' ";
 			}
 		}
 		return $output;

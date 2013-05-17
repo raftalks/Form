@@ -1,5 +1,6 @@
 <?php
 namespace Html;
+use InvalidArgumentException;
 
 class Html
 {
@@ -36,7 +37,25 @@ class Html
 	 */
 	public static function __callStatic($method, $args)
 	{
+		return static::runCallback($method, $args);
+	}
+
+
+	public function __call($method, $args)
+	{
+		return $this->runCallback($method, $args);
+	}
+
+
+	protected function runCallback($method, $args)
+	{
 		$instance = static::resolveFacadeInstance();
+
+		if(empty($args))
+		{
+			throw new InvalidArgumentException("Please provide an argument to this method");
+			
+		}
 
 		switch (count($args))
 		{
