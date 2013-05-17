@@ -44,11 +44,11 @@ class Form
 
 	public function __call($method, $args)
 	{
-		return $this->runCallback($method, $args);
+		return static::runCallback($method, $args);
 	}
 
 
-	protected function runCallback($method, $args)
+	protected static function runCallback($method, $args)
 	{
 		$instance = static::resolveFacadeInstance();
 
