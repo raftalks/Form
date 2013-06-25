@@ -1,6 +1,7 @@
-<?php namespace Html;
+<?php 
+use Raftalks\Html\Html;
 
-class HtmlTest extends TestCase
+class HtmlTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{

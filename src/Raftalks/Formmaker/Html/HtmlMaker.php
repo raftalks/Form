@@ -1,5 +1,4 @@
-<?php
-namespace Html;
+<?php namespace Raftalks\Formmaker\Html;
 use Closure;
 
 class HtmlMaker

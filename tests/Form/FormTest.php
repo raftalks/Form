@@ -1,9 +1,16 @@
-<?php namespace Form;
+<?php 
 
-class FormTest extends TestCase
+use Raftalks\Form\Form;
+
+class FormTest extends PHPUnit_Framework_TestCase
 {
 
-	
+	public function setUp()
+	{
+
+		$this->form = new Form;
+
+	}
 
 	/**
 	 * @expectedException	InvalidArgumentException
@@ -12,7 +19,6 @@ class FormTest extends TestCase
 	{
 		$this->form->make();
 	}
-
 
 
 	public function testFormEmptyFormElement()
