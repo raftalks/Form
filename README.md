@@ -2,7 +2,10 @@
 
 Form Maker can help buildind forms in PHP. Specially developed package for Laravel 4.
 
-#Updated to version 1.2.3
+#Updated to version 1.3.1
+- Fixed namespace structure
+
+##Updated to version 1.2.3
 ###Change Log
 - Added support to create table, tr, th, td, thead, tbody, etc to generate html Table
 - Added additional support for html container type tags
@@ -34,7 +37,6 @@ Now we need to put the class Alias inside L4 app/config/app.php file.
 Find the aliases key which should be below the providers key and put the following inside its array.
 ```php
 	'Form'	 => 'Form\Form',
-	'Html'	 => 'Html\Html', //required to be added for version 1.2.0
 ```
 Now you can try using the Form::make(function($form){ ...here you can put the form fields ...});
 
