@@ -1,23 +1,41 @@
-<?php namespace Raftalks\Formmaker\Html;
+<?php namespace Raftalks\Form;
+use Raftalks\Form\Html\TagDecorator;
 use InvalidArgumentException;
 
-class Html
+
+class Form
 {
 
+	/**
+	 * Form Handler
+	 * @var object
+	 */
 	public static $handler;
 
+	/**
+	 * Html Tag Decorator
+	 * @var object
+	 */
 	public static $decorator;
-
 	
+
+	/**
+	 * Resolves the facade instance 
+	 * @return object FormHandler
+	 */
 	public static function resolveFacadeInstance()
 	{
 		if (is_object(static::$handler)) return static::$handler;
 
 		$decorator = static::getDecorator();
 
-		return static::$handler = new HtmlHandler($decorator);
+		return static::$handler = new FormHandler($decorator);
 	}
 
+	/**
+	 * return the Decorator object
+	 * @return object TagDecorator
+	 */
 	public static function getDecorator()
 	{
 		if (is_object(static::$decorator)) return static::$decorator;
@@ -28,7 +46,7 @@ class Html
 
 
 	/**
-	 * Handle dynamic, static calls to the object.
+	 * Handle static calls to the object.
 	 *
 	 * @param  string  $method
 	 * @param  array   $args
@@ -39,13 +57,24 @@ class Html
 		return static::runCallback($method, $args);
 	}
 
-
+	/**
+	 * Allowing object instane to access methods
+	 * @param  string $method
+	 * @param  array $args
+	 * @return mixed
+	 */
 	public function __call($method, $args)
 	{
 		return static::runCallback($method, $args);
 	}
 
 
+	/**
+	 * Facotory method to call the handler methods
+	 * @param  string $method
+	 * @param  array $args
+	 * @return mixed
+	 */
 	protected static function runCallback($method, $args)
 	{
 		$instance = static::resolveFacadeInstance();

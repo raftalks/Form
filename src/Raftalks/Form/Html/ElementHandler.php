@@ -1,4 +1,4 @@
-<?php namespace Raftalks\Formmaker\Html;
+<?php namespace Raftalks\Form\Html;
 
 class ElementHandler
 {

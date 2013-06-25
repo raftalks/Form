@@ -1,5 +1,5 @@
 <?php 
-use Raftalks\Html\Html;
+use Raftalks\Form\Html\Html;
 
 class HtmlTest extends \PHPUnit_Framework_TestCase
 {
